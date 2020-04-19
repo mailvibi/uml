@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-2.0
+#core-y += arch/x86/crypto/
+
+START := 0x8048000
+
+KBUILD_LDFLAGS	+= -EL
+#ELF_ARCH		:= i386
+#ELF_FORMAT 		:= elf32-i386
+#CHECKFLAGS	+= -D__ARMEL__
+
+KBUILD_CFLAGS		+= $(call cc-option,-m32)
+KBUILD_AFLAGS		+= $(call cc-option,-m32)
+LINK-y			+= $(call cc-option,-m32)
+
+#LDS_EXTRA		:= -Ui386
+export LDS_EXTRA
+
+# First of all, tune CFLAGS for the specific CPU. This actually sets cflags-y.
+include arch/arm/Makefile
+
+# prevent gcc from keeping the stack 16 byte aligned. Taken from i386.
+cflags-y += $(call cc-option,-mpreferred-stack-boundary=2)
+
+# Prevent sprintf in nfsd from being converted to strcpy and resulting in
+# an unresolved reference.
+cflags-y += -ffreestanding
+
+KBUILD_CFLAGS += $(cflags-y)

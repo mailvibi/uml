@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0
+
+menu "Host processor type and features"
+
+source "arch/arm/Kconfig"
+
+endmenu
+
+config UML_ARM
+	def_bool y
+	select GENERIC_FIND_FIRST_BIT
